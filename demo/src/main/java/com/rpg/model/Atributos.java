@@ -3,12 +3,12 @@ package com.rpg.model;
 
 public class Atributos {
 
-    private int forca;
-    private int destreza;
-    private int constituicao;
-    private int inteligencia;
-    private int sabedoria;
-    private int carisma;
+    private final int forca;
+    private final int destreza;
+    private final int constituicao;
+    private final int inteligencia;
+    private final int sabedoria;
+    private final int carisma;
 
     public Atributos(
             int forca,
@@ -26,39 +26,45 @@ public class Atributos {
         this.carisma = carisma;
     }
 
-    public int getForca() {
-        return forca;
-    }
+    public int getForca() { return forca; }
+    public int getDestreza() { return destreza; }
+    public int getConstituicao() { return constituicao; }
+    public int getInteligencia() { return inteligencia; }
+    public int getSabedoria() { return sabedoria; }
+    public int getCarisma() { return carisma; }
 
-    public int getDestreza() {
-        return destreza;
-    }
-
-    public int getConstituicao() {
-        return constituicao;
-    }
-
-    public int getInteligencia() {
-        return inteligencia;
-    }
-
-    public int getSabedoria() {
-        return sabedoria;
-    }
-
-    public int getCarisma() {
-        return carisma;
-    }
-
-    public int calcularModificador(int valor) {
-        return (int) Math.floor((valor - 10) / 2.0);
+    public Atributos somar(Atributos bonus) {
+        return new Atributos(
+                forca + bonus.forca,
+                destreza + bonus.destreza,
+                constituicao + bonus.constituicao,
+                inteligencia + bonus.inteligencia,
+                sabedoria + bonus.sabedoria,
+                carisma + bonus.carisma
+        );
     }
 
     public int getModificadorForca() {
-        return calcularModificador(forca);
+        return (forca - 10) / 2;
     }
 
     public int getModificadorDestreza() {
-        return calcularModificador(destreza);
+        return (destreza - 10) / 2;
+    }
+
+    public int getModificadorConstituicao() {
+        return (constituicao - 10) / 2;
+    }
+
+    public int getModificadorInteligencia() {
+        return (inteligencia - 10) / 2;
+    }
+
+    public int getModificadorSabedoria() {
+        return (sabedoria - 10) / 2;
+    }
+
+    public int getModificadorCarisma() {
+        return (carisma - 10) / 2;
     }
 }

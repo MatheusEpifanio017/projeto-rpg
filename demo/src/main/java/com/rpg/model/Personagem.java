@@ -3,68 +3,68 @@ package com.rpg.model;
 
 public class Personagem {
 
-    private String nome;
-    private String raca;
-    private int nivel = 1;
-
-    private Atributos atributos;
-    private Classe classe;
-    private Subclasse subclasse;
+    private final String nome;
+    private final Classe classe;
+    private final Raca raca;
+    private final Atributos atributosBase;
+    private final Atributos atributosFinais;
+    private final int pontosVidaMaximos;
+    private int pontosVidaAtuais;
+    private int nivel;
 
     public Personagem(
             String nome,
-            String raca,
-            Atributos atributos) {
+            Classe classe,
+            Raca raca,
+            Atributos atributosBase,
+            Atributos atributosFinais,
+            int pontosVidaMaximos) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException(
+                    "O personagem precisa de um nome.");
+        }
 
         this.nome = nome;
-        this.raca = raca;
-        this.atributos = atributos;
-    }
-
-    public void escolherClasse(Classe classe) {
         this.classe = classe;
-        this.subclasse = null;
+        this.raca = raca;
+        this.atributosBase = atributosBase;
+        this.atributosFinais = atributosFinais;
+        this.pontosVidaMaximos = pontosVidaMaximos;
+        this.pontosVidaAtuais = pontosVidaMaximos;
+        this.nivel = 1;
     }
 
-    public void escolherSubclasse(Subclasse subclasse) {
+    public String getNome() { return nome; }
+    public Classe getClasse() { return classe; }
+    public Raca getRaca() { return raca; }
+    public Atributos getAtributosBase() { return atributosBase; }
+    public Atributos getAtributosFinais() { return atributosFinais; }
+    public int getPontosVidaMaximos() { return pontosVidaMaximos; }
+    public int getPontosVidaAtuais() { return pontosVidaAtuais; }
+    public int getNivel() { return nivel; }
 
-        if (classe == null) {
-            throw new IllegalStateException(
-                "Escolha uma classe antes da subclasse."
-            );
-        }
+    public PassivaRacial getPassivaRacial() {
+        return raca.getPassiva();
+    }
 
-        if (!classe.getNome().equalsIgnoreCase(
-                subclasse.getClasseNome())) {
+    public void receberDano(int dano) {
+        if (dano < 0) {
             throw new IllegalArgumentException(
-                "Essa subclasse não pertence à classe escolhida."
-            );
+                    "O dano não pode ser negativo.");
         }
 
-        this.subclasse = subclasse;
+        pontosVidaAtuais = Math.max(0, pontosVidaAtuais - dano);
     }
 
-    public String getNome() {
-        return nome;
-    }
+    public void curar(int quantidade) {
+        if (quantidade < 0) {
+            throw new IllegalArgumentException(
+                    "A cura não pode ser negativa.");
+        }
 
-    public String getRaca() {
-        return raca;
-    }
-
-    public int getNivel() {
-        return nivel;
-    }
-
-    public Atributos getAtributos() {
-        return atributos;
-    }
-
-    public Classe getClasse() {
-        return classe;
-    }
-
-    public Subclasse getSubclasse() {
-        return subclasse;
+        pontosVidaAtuais = Math.min(
+                pontosVidaMaximos,
+                pontosVidaAtuais + quantidade);
     }
 }

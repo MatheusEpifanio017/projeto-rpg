@@ -1,38 +1,42 @@
 
 package com.rpg.model;
 
+import java.util.List;
+
 public class Classe {
 
-    private String nome;
-    private String descricao;
-    private String atributoPrincipal;
-    private int dadoDeVida;
+    private final String nome;
+    private final String descricao;
+    private final Atributos atributosBase;
+    private final int pontosVidaBase;
+    private final List<String> habilidadesIniciais;
 
     public Classe(
             String nome,
             String descricao,
-            String atributoPrincipal,
-            int dadoDeVida) {
+            Atributos atributosBase,
+            int pontosVidaBase,
+            List<String> habilidadesIniciais) {
+
+        if (pontosVidaBase <= 0) {
+            throw new IllegalArgumentException(
+                    "Os pontos de vida devem ser positivos.");
+        }
 
         this.nome = nome;
         this.descricao = descricao;
-        this.atributoPrincipal = atributoPrincipal;
-        this.dadoDeVida = dadoDeVida;
+        this.atributosBase = atributosBase;
+        this.pontosVidaBase = pontosVidaBase;
+        this.habilidadesIniciais =
+                List.copyOf(habilidadesIniciais);
     }
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome() { return nome; }
+    public String getDescricao() { return descricao; }
+    public Atributos getAtributosBase() { return atributosBase; }
+    public int getPontosVidaBase() { return pontosVidaBase; }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public String getAtributoPrincipal() {
-        return atributoPrincipal;
-    }
-
-    public int getDadoDeVida() {
-        return dadoDeVida;
+    public List<String> getHabilidadesIniciais() {
+        return habilidadesIniciais;
     }
 }

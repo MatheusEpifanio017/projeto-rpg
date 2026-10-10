@@ -1,37 +1,29 @@
 
 package com.rpg.model;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.List;
-
 public class Raca {
 
     private final String nome;
-    private final Map<String, Integer> bonusAtributos;
-    private final List<Caracteristica> caracteristicas;
+    private final Atributos bonusAtributos;
+    private final PassivaRacial passiva;
 
     public Raca(
             String nome,
-            Map<String, Integer> bonusAtributos,
-            List<Caracteristica> caracteristicas) {
+            Atributos bonusAtributos,
+            PassivaRacial passiva) {
 
         this.nome = nome;
-        this.bonusAtributos =
-                Map.copyOf(bonusAtributos);
-        this.caracteristicas =
-                List.copyOf(caracteristicas);
+        this.bonusAtributos = bonusAtributos;
+        this.passiva = passiva;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNome() { return nome; }
+
+    public Atributos getBonusAtributos() {
+        return bonusAtributos;
     }
 
-    public Map<String, Integer> getBonusAtributos() {
-        return Collections.unmodifiableMap(bonusAtributos);
-    }
-
-    public List<Caracteristica> getCaracteristicas() {
-        return caracteristicas;
+    public PassivaRacial getPassiva() {
+        return passiva;
     }
 }
