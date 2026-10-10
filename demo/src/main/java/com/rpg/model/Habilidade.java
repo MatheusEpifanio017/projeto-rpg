@@ -4,7 +4,7 @@ package com.rpg.model;
 public record Habilidade(
         String nome,
         String descricao,
-        int nivelDesbloqueio,
+        int nivelDesbloqueio, 
         int custoRecurso
 ) {
     public Habilidade {
