@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090a0d">
+    <title>MYTHBOUND | A sua jornada começa aqui</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/auth.js" defer></script>
+</head>
+<body>
+    <div class="background-glow"></div>
+    <div class="rune-rail rune-rail-left" aria-hidden="true">
+        ᚱ · ᚨ · ᛟ · ᚷ · ᚲ · ᛉ · ᚹ
+    </div>
+    <div class="rune-rail rune-rail-right" aria-hidden="true">
+        ᛉ · ᚹ · ᚲ · ᛟ · ᚨ · ᚷ · ᚱ
+    </div>
+
+    <main class="page">
+        <section class="auth-card" aria-labelledby="brand-title">
+            <div class="ornament ornament-top" aria-hidden="true">
+                <span></span>
+                <div class="rune-star">✦</div>
+                <span></span>
+            </div>
+
+            <header class="brand">
+                <div class="brand-symbol" aria-hidden="true">ᛟ</div>
+                <p class="eyebrow">AS CRÔNICAS DE UM NOVO MUNDO</p>
+                <h1 id="brand-title">MYTHBOUND</h1>
+                <div class="title-divider">
+                    <span></span>
+                    <span class="diamond">◆</span>
+                    <span></span>
+                </div>
+                <p class="subtitle">Sua jornada começa aqui.</p>
+            </header>
+
+            <div class="tabs" role="tablist" aria-label="Tipo de acesso">
+                <button
+                    type="button"
+                    class="tab active"
+                    id="login-tab"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="login-panel">
+                    Entrar
+                </button>
+                <button
+                    type="button"
+                    class="tab"
+                    id="register-tab"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="register-panel">
+                    Criar conta
+                </button>
+            </div>
+
+            <div
+                class="form-panel"
+                id="login-panel"
+                role="tabpanel"
+                aria-labelledby="login-tab">
+
+                <p class="form-heading">Retorne à sua história</p>
+                <p class="form-description">
+                    Suas aventuras aguardam por você.
+                </p>
+
+                <form id="login-form">
+                    <div class="field">
+                        <label for="login-email">E-mail</label>
+                        <input
+                            type="email"
+                            id="login-email"
+                            name="email"
+                            placeholder="voce@exemplo.com"
+                            autocomplete="email"
+                            maxlength="254"
+                            required>
+                    </div>
+
+                    <div class="field">
+                        <label for="login-password">Senha</label>
+                        <input
+                            type="password"
+                            id="login-password"
+                            name="password"
+                            placeholder="Digite sua senha"
+                            autocomplete="current-password"
+                            maxlength="128"
+                            required>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-option">
+                            <input type="checkbox" id="remember-me">
+                            <span>Lembrar de mim</span>
+                        </label>
+
+                        <button
+                            type="button"
+                            class="text-button"
+                            id="forgot-password">
+                            Esqueci minha senha
+                        </button>
+                    </div>
+
+                    <button type="submit" class="primary-button">
+                        <span>Entrar na jornada</span>
+                        <span class="button-arrow" aria-hidden="true">→</span>
+                    </button>
+                </form>
+
+                <p class="switch-text">
+                    Ainda não possui uma conta?
+                    <button type="button" class="text-button" data-switch="register">
+                        Crie sua conta
+                    </button>
+                </p>
+            </div>
+
+            <div
+                class="form-panel hidden"
+                id="register-panel"
+                role="tabpanel"
+                aria-labelledby="register-tab"
+                hidden>
+
+                <p class="form-heading">Forje seu destino</p>
+                <p class="form-description">
+                    Crie sua conta e comece uma nova aventura.
+                </p>
+
+                <form id="register-form">
+                    <div class="field">
+                        <label for="register-name">Nome de aventureiro</label>
+                        <input
+                            type="text"
+                            id="register-name"
+                            name="name"
+                            placeholder="Como será conhecido?"
+                            autocomplete="nickname"
+                            minlength="3"
+                            maxlength="40"
+                            required>
+                    </div>
+
+                    <div class="field">
+                        <label for="register-email">E-mail</label>
+                        <input
+                            type="email"
+                            id="register-email"
+                            name="email"
+                            placeholder="voce@exemplo.com"
+                            autocomplete="email"
+                            maxlength="254"
+                            required>
+                    </div>
+
+                    <div class="field">
+                        <label for="register-password">Senha</label>
+                        <input
+                            type="password"
+                            id="register-password"
+                            name="password"
+                            placeholder="Crie uma senha"
+                            autocomplete="new-password"
+                            minlength="8"
+                            maxlength="128"
+                            aria-describedby="password-help"
+                            required>
+                        <small id="password-help">
+                            Use pelo menos 8 caracteres.
+                        </small>
+                    </div>
+
+                    <div class="field">
+                        <label for="register-confirm-password">
+                            Confirmar senha
+                        </label>
+                        <input
+                            type="password"
+                            id="register-confirm-password"
+                            name="confirm-password"
+                            placeholder="Digite a senha novamente"
+                            autocomplete="new-password"
+                            minlength="8"
+                            maxlength="128"
+                            required>
+                    </div>
+
+                    <button type="submit" class="primary-button">
+                        <span>Criar minha conta</span>
+                        <span class="button-arrow" aria-hidden="true">→</span>
+                    </button>
+                </form>
+
+                <p class="switch-text">
+                    Já faz parte deste mundo?
+                    <button type="button" class="text-button" data-switch="login">
+                        Entre na sua conta
+                    </button>
+                </p>
+            </div>
+
+            <div
+                id="feedback"
+                class="feedback"
+                role="status"
+                aria-live="polite"
+                hidden>
+            </div>
+
+            <footer class="card-footer">
+                <span class="footer-line"></span>
+                <p>UM MUNDO. INÚMERAS HISTÓRIAS.</p>
+                <span class="footer-line"></span>
+            </footer>
+
+            <div class="ornament ornament-bottom" aria-hidden="true">
+                <span></span>
+                <div>✧</div>
+                <span></span>
+            </div>
+        </section>
+
+        <p class="page-quote">
+            <span>“</span> O destino pertence àqueles que ousam escrevê-lo.
+        </p>
+    </main>
+</body>
+</html>

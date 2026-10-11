@@ -1,0 +1,758 @@
+:root {
+    --background: #080D16;
+    --background-deep: #050810;
+    --panel: rgba(13, 22, 36, 0.97);
+    --panel-light: #18283A;
+    --blue: #8ABBD5;
+    --blue-light: #DCECF5;
+    --blue-dark: #426982;
+    --text: #E4EDF4;
+    --muted: #91A4B7;
+    --border: rgba(138, 187, 213, 0.25);
+    --danger: #E9A4AD;
+    --success: #B5D8C1;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    min-height: 100%;
+    color-scheme: dark;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background:
+        radial-gradient(ellipse at 50% 12%, rgba(77, 125, 163, 0.17), transparent 43%),
+        radial-gradient(ellipse at 50% 100%, rgba(37, 73, 106, 0.17), transparent 52%),
+        linear-gradient(180deg, #0B1320 0%, var(--background) 65%, #050810 100%);
+    color: var(--text);
+    font-family: "Nunito Sans", sans-serif;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    background-image:
+        linear-gradient(rgba(196, 222, 240, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(196, 222, 240, 0.025) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--blue-light);
+    outline-offset: 3px;
+}
+
+.background-glow {
+    position: fixed;
+    width: 340px;
+    height: 340px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(100, 166, 207, 0.09);
+    filter: blur(90px);
+    pointer-events: none;
+}
+
+.rune-rail {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    color: var(--blue);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 19px;
+    opacity: 0.35;
+    pointer-events: none;
+    user-select: none;
+}
+
+.rune-rail::before,
+.rune-rail::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 18%;
+    background: linear-gradient(transparent, var(--blue), transparent);
+}
+
+.rune-rail::before {
+    top: 0;
+}
+
+.rune-rail::after {
+    bottom: 0;
+}
+
+.rune-rail-left {
+    left: 14px;
+}
+
+.rune-rail-right {
+    right: 14px;
+}
+
+.page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 16px;
+}
+
+.auth-card {
+    position: relative;
+    width: min(100%, 370px);
+    padding: 22px 25px 18px;
+    background:
+        linear-gradient(145deg, rgba(195, 222, 242, 0.035), transparent 38%),
+        var(--panel);
+    border: 1px solid var(--blue-dark);
+    box-shadow:
+        0 0 0 4px rgba(138, 187, 213, 0.035),
+        0 16px 60px rgba(0, 0, 0, 0.6),
+        0 0 45px rgba(75, 137, 177, 0.08),
+        inset 0 0 32px rgba(0, 0, 0, 0.35);
+}
+
+.auth-card::before,
+.auth-card::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: var(--blue);
+    border-style: solid;
+    pointer-events: none;
+}
+
+.auth-card::before {
+    top: 6px;
+    left: 6px;
+    border-width: 1px 0 0 1px;
+}
+
+.auth-card::after {
+    right: 6px;
+    bottom: 6px;
+    border-width: 0 1px 1px 0;
+}
+
+.ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--blue);
+}
+
+.ornament span {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, transparent, var(--blue-dark));
+}
+
+.ornament span:last-child {
+    background: linear-gradient(90deg, var(--blue-dark), transparent);
+}
+
+.ornament-top {
+    margin-bottom: 14px;
+}
+
+.rune-star {
+    font-size: 22px;
+    color: var(--blue-light);
+    text-shadow: 0 0 18px rgba(175, 218, 240, 0.35);
+}
+
+.brand {
+    text-align: center;
+    margin-bottom: 17px;
+}
+
+.brand-symbol {
+    color: var(--blue);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 27px;
+    line-height: 1;
+    margin-bottom: 7px;
+    text-shadow: 0 0 20px rgba(138, 187, 213, 0.3);
+}
+
+.eyebrow {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 7px;
+}
+
+.brand h1 {
+    color: var(--blue-light);
+    font-family: "Cormorant Garamond", "Palatino Linotype", serif;
+    font-size: clamp(27px, 6vw, 35px);
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    line-height: 1.15;
+    text-shadow: 0 3px 24px rgba(138, 187, 213, 0.16);
+}
+
+.title-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 75%;
+    margin: 9px auto;
+}
+
+.title-divider > span:not(.diamond) {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue-dark));
+}
+
+.title-divider > span:last-child {
+    background: linear-gradient(90deg, var(--blue-dark), transparent);
+}
+
+.diamond {
+    color: var(--blue);
+    font-size: 8px;
+}
+
+.subtitle {
+    color: #A9C0D1;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 12px;
+    letter-spacing: 1.4px;
+}
+
+.tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    padding: 3px;
+    margin-bottom: 17px;
+    background: #090F19;
+    border: 1px solid rgba(138, 187, 213, 0.18);
+}
+
+.tab {
+    border: 1px solid transparent;
+    padding: 8px 6px;
+    color: var(--muted);
+    background: transparent;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.tab:hover {
+    color: var(--text);
+}
+
+.tab.active {
+    color: var(--blue-light);
+    background: linear-gradient(180deg, rgba(100, 159, 194, 0.18), rgba(65, 105, 137, 0.06));
+    border-color: rgba(138, 187, 213, 0.4);
+}
+
+.form-heading {
+    text-align: center;
+    color: var(--text);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.form-description {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.field {
+    margin-bottom: 11px;
+}
+
+.field label {
+    display: block;
+    color: #C5D4E0;
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+.field input {
+    display: block;
+    width: 100%;
+    min-height: 38px;
+    padding: 9px 10px;
+    border: 1px solid #344557;
+    border-radius: 2px;
+    color: var(--text);
+    background: #0B121E;
+    font-size: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.field input::placeholder {
+    color: #718398;
+}
+
+.field input:hover {
+    border-color: #5C819D;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: var(--blue);
+    background: #101C2B;
+    box-shadow: 0 0 0 3px rgba(138, 187, 213, 0.09);
+}
+
+.field input[aria-invalid="true"] {
+    border-color: var(--danger);
+}
+
+.field small {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 1px 0 17px;
+}
+
+.remember-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.remember-option input {
+    accent-color: var(--blue);
+    width: 12px;
+    height: 12px;
+}
+
+.text-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--blue);
+    cursor: pointer;
+    font-size: 10px;
+    text-decoration: underline;
+    text-decoration-color: rgba(138, 187, 213, 0.45);
+    text-underline-offset: 3px;
+}
+
+.text-button:hover {
+    color: var(--blue-light);
+}
+
+.primary-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    min-height: 41px;
+    padding: 9px 10px;
+    border: 1px solid #A8D2E8;
+    border-radius: 2px;
+    color: #08111B;
+    background: linear-gradient(110deg, #527D9C, #C1DFEF 48%, #7FAAC5);
+    box-shadow: 0 4px 20px rgba(86, 145, 182, 0.13);
+    cursor: pointer;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.primary-button:hover {
+    filter: brightness(1.12);
+    box-shadow: 0 4px 26px rgba(110, 178, 216, 0.23);
+}
+
+.primary-button:active {
+    transform: translateY(1px);
+}
+
+.button-arrow {
+    font-size: 17px;
+    line-height: 1;
+}
+
+.switch-text {
+    margin-top: 14px;
+    color: var(--muted);
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.8;
+}
+
+.switch-text .text-button {
+    margin-left: 3px;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.card-footer p {
+    flex-shrink: 0;
+    color: #8195A8;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 9px;
+    letter-spacing: 1.3px;
+    text-align: center;
+}
+
+.footer-line {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, transparent, rgba(138, 187, 213, 0.3));
+}
+
+.footer-line:last-child {
+    background: linear-gradient(90deg, rgba(138, 187, 213, 0.3), transparent);
+}
+
+.ornament-bottom {
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.hidden,
+[hidden] {
+    display: none !important;
+}
+
+.feedback {
+    margin-top: 13px;
+    padding: 9px;
+    border: 1px solid var(--border);
+    background: rgba(138, 187, 213, 0.06);
+    color: var(--blue-light);
+    font-size: 11px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.feedback.error {
+    border-color: rgba(233, 164, 173, 0.4);
+    color: var(--danger);
+    background: rgba(233, 164, 173, 0.06);
+}
+
+.feedback.success {
+    border-color: rgba(181, 216, 193, 0.35);
+    color: var(--success);
+    background: rgba(181, 216, 193, 0.06);
+}
+
+.page-quote {
+    margin-top: 13px;
+    color: #8093A5;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 11px;
+    letter-spacing: 0.7px;
+    text-align: center;
+}
+
+.page-quote span {
+    color: var(--blue);
+    font-size: 18px;
+    vertical-align: -3px;
+    margin-right: 3px;
+}
+
+@media (max-width: 600px) {
+    .page {
+        justify-content: center;
+        padding: 18px 13px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 345px;
+        padding: 20px 18px 16px;
+    }
+
+    .rune-rail {
+        width: 11px;
+        font-size: 9px;
+        opacity: 0.12;
+    }
+
+    .rune-rail-left {
+        left: 1px;
+    }
+
+    .rune-rail-right {
+        right: 1px;
+    }
+
+    .brand h1 {
+        font-size: clamp(26px, 7vw, 33px);
+        letter-spacing: 1.8px;
+    }
+
+    .eyebrow {
+        font-size: 7px;
+        letter-spacing: 1.3px;
+    }
+
+    .form-options {
+        flex-wrap: wrap;
+    }
+
+    .page-quote {
+        max-width: 280px;
+        font-size: 10px;
+        line-height: 1.7;
+    }
+}
+
+@media (max-width: 360px) {
+    .page {
+        padding: 12px 9px;
+    }
+
+    .auth-card {
+        padding: 18px 14px 14px;
+    }
+
+    .brand h1 {
+        font-size: 25px;
+        letter-spacing: 1px;
+    }
+
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 9px;
+    }
+
+    .card-footer p {
+        font-size: 8px;
+        letter-spacing: 0.5px;
+    }
+}
+
+@media (max-height: 650px) {
+    .page {
+        justify-content: flex-start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+.auth-card {
+width: min(100%, 370px);
+}
+
+.auth-card .brand {
+margin-bottom: 17px;
+}
+
+.auth-card .brand h1 {
+font-family: "Cormorant Garamond", "Palatino Linotype", serif;
+font-size: clamp(27px, 6vw, 35px);
+font-weight: 600;
+letter-spacing: 2.5px;
+line-height: 1.15;
+}
+
+.auth-card .form-heading {
+font-family: "Cormorant Garamond", serif;
+font-size: 20px;
+font-weight: 600;
+margin-bottom: 6px;
+}
+
+.auth-card .form-description {
+font-size: 11px;
+line-height: 1.6;
+margin-bottom: 15px;
+}
+
+.auth-card .field {
+margin-bottom: 11px;
+}
+
+.auth-card .field input {
+min-height: 38px;
+font-size: 12px;
+}
+
+.auth-card .primary-button {
+min-height: 41px;
+font-family: "Cormorant Garamond", serif;
+font-size: 14px;
+font-weight: 700;
+letter-spacing: 1.3px;
+}
+
+@media (max-width: 600px) {
+.auth-card .brand h1 {
+font-size: clamp(26px, 7vw, 33px);
+letter-spacing: 1.8px;
+}
+}
+
+@media (max-width: 360px) {
+.auth-card .brand h1 {
+font-size: 25px;
+letter-spacing: 1px;
+}
+}       
+
+#login-panel,
+#register-panel {
+    width: 100%;
+    font-family: "Nunito Sans", sans-serif;
+}
+
+#login-panel .form-heading,
+#register-panel .form-heading {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+}
+
+#login-panel .form-description,
+#register-panel .form-description {
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--muted);
+    text-align: center;
+}
+
+#login-panel .field label,
+#register-panel .field label {
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 11px;
+    color: #C5D4E0;
+}
+
+#login-panel .field input,
+#register-panel .field input {
+    width: 100%;
+    min-height: 38px;
+    padding: 9px 10px;
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 12px;
+    color: var(--text);
+    background: #0B121E;
+    border: 1px solid #344557;
+    border-radius: 2px;
+}
+
+#login-panel .primary-button,
+#register-panel .primary-button {
+    width: 100%;
+    min-height: 41px;
+    padding: 9px 10px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    color: #08111B;
+    background: linear-gradient(110deg, #527D9C, #C1DFEF 48%, #7FAAC5);
+    border: 1px solid #A8D2E8;
+    border-radius: 2px;
+}
+
+#login-panel .primary-button:hover,
+#register-panel .primary-button:hover {
+    filter: brightness(1.12);
+}
+
+#login-panel .text-button,
+#register-panel .text-button {
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 10px;
+}
+
+#login-panel .field input:focus,
+#register-panel .field input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(138, 187, 213, 0.09);
+}
+
+#login-panel .field input:hover,
+#register-panel .field input:hover {
+    border-color: #5C819D;
+}
+
+#login-panel .field,
+#register-panel .field {
+    margin-bottom: 11px;
+}
