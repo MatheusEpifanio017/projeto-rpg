@@ -1,4 +1,3 @@
-
 package com.rpg.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,21 +16,20 @@ public class SalvamentoService {
     public void salvar(EstadoHistoria estado) {
         if (estado == null) {
             throw new IllegalArgumentException(
-                "O estado da história não pode ser nulo."
-            );
+                    "O estado da história não pode ser nulo.");
         }
 
         try {
             Files.createDirectories(pasta);
+
             mapper.writerWithDefaultPrettyPrinter()
-                  .writeValue(arquivo.toFile(), estado);
+                    .writeValue(arquivo.toFile(), estado);
 
             System.out.println("Progresso salvo com sucesso!");
 
         } catch (IOException e) {
             throw new RuntimeException(
-                "Não foi possível salvar o progresso.", e
-            );
+                    "Não foi possível salvar o progresso.", e);
         }
     }
 
@@ -43,14 +41,12 @@ public class SalvamentoService {
 
         try {
             return mapper.readValue(
-                arquivo.toFile(),
-                EstadoHistoria.class
-            );
+                    arquivo.toFile(),
+                    EstadoHistoria.class);
 
         } catch (IOException e) {
             throw new RuntimeException(
-                "Não foi possível carregar o progresso.", e
-            );
+                    "Não foi possível carregar o progresso.", e);
         }
     }
 }

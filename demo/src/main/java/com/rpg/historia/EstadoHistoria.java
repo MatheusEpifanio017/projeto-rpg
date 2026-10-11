@@ -9,7 +9,7 @@ public class EstadoHistoria {
 
     private String capituloAtual;
     private String cenaAtual;
-
+    
     private final Map<String, Boolean> decisoes;
     private final Map<String, Boolean> informacoesDescobertas;
 

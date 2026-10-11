@@ -1,4 +1,3 @@
-    
 package com.rpg.service;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,15 +15,25 @@ public class CombateService {
     }
 
     public int rolarIniciativa(Personagem personagem) {
+        if (personagem == null) {
+            throw new IllegalArgumentException(
+                    "O personagem é obrigatório para rolar iniciativa.");
+        }
+
+        if (personagem.getPontosVidaAtuais() <= 0) {
+            throw new IllegalStateException(
+                    "Um personagem derrotado não pode participar do combate.");
+        }
+
         int iniciativa = rolarD20()
                 + personagem.getAtributosFinais()
                         .getModificadorDestreza();
 
-        PassivaRacial passiva =
-                personagem.getPassivaRacial();
+        PassivaRacial passiva = personagem.getPassivaRacial();
 
-        if (passiva.getTipo()
-                == PassivaRacial.Tipo.REFLEXOS_ELFICOS) {
+        if (passiva != null
+                && passiva.getTipo()
+                        == PassivaRacial.Tipo.REFLEXOS_ELFICOS) {
             iniciativa += passiva.getIntensidade();
         }
 
@@ -35,6 +44,21 @@ public class CombateService {
             Personagem atacante,
             Personagem alvo,
             TipoDano tipoDano) {
+
+        if (atacante == null || alvo == null) {
+            throw new IllegalArgumentException(
+                    "O atacante e o alvo são obrigatórios.");
+        }
+
+        if (tipoDano == null) {
+            throw new IllegalArgumentException(
+                    "O tipo de dano é obrigatório.");
+        }
+
+        if (atacante == alvo) {
+            throw new IllegalArgumentException(
+                    "Um personagem não pode atacar a si mesmo.");
+        }
 
         if (atacante.getPontosVidaAtuais() <= 0) {
             throw new IllegalStateException(
@@ -93,20 +117,23 @@ public class CombateService {
             PassivaRacial passivaAlvo =
                     alvo.getPassivaRacial();
 
-            if (passivaAlvo.getTipo()
-                    == PassivaRacial.Tipo.RESILIENCIA) {
-                reducao = passivaAlvo.getIntensidade();
-                dano = Math.max(0, dano - reducao);
+            if (passivaAlvo != null
+                    && passivaAlvo.getTipo()
+                            == PassivaRacial.Tipo.RESILIENCIA) {
+                dano = Math.max(
+                        0,
+                        dano - passivaAlvo.getIntensidade());
             }
 
             PassivaRacial passivaAtacante =
                     atacante.getPassivaRacial();
 
             if (tipoDano == TipoDano.FISICO
+                    && passivaAtacante != null
                     && passivaAtacante.getTipo()
-                    == PassivaRacial.Tipo.FURIA_ANCESTRAL
+                            == PassivaRacial.Tipo.FURIA_ANCESTRAL
                     && atacante.getPontosVidaAtuais()
-                    <= atacante.getPontosVidaMaximos() * 0.25) {
+                            <= atacante.getPontosVidaMaximos() * 0.25) {
 
                 dano += passivaAtacante.getIntensidade();
             }
@@ -124,4 +151,5 @@ public class CombateService {
                 alvo.getPontosVidaAtuais() <= 0
         );
     }
+
 }

@@ -1,4 +1,3 @@
-
 package com.rpg.model;
 
 public class Atributos {
@@ -26,14 +25,36 @@ public class Atributos {
         this.carisma = carisma;
     }
 
-    public int getForca() { return forca; }
-    public int getDestreza() { return destreza; }
-    public int getConstituicao() { return constituicao; }
-    public int getInteligencia() { return inteligencia; }
-    public int getSabedoria() { return sabedoria; }
-    public int getCarisma() { return carisma; }
+    public int getForca() {
+        return forca;
+    }
+
+    public int getDestreza() {
+        return destreza;
+    }
+
+    public int getConstituicao() {
+        return constituicao;
+    }
+
+    public int getInteligencia() {
+        return inteligencia;
+    }
+
+    public int getSabedoria() {
+        return sabedoria;
+    }
+
+    public int getCarisma() {
+        return carisma;
+    }
 
     public Atributos somar(Atributos bonus) {
+        if (bonus == null) {
+            throw new IllegalArgumentException(
+                    "Os atributos bônus não podem ser nulos.");
+        }
+
         return new Atributos(
                 forca + bonus.forca,
                 destreza + bonus.destreza,
@@ -45,26 +66,30 @@ public class Atributos {
     }
 
     public int getModificadorForca() {
-        return (forca - 10) / 2;
+        return calcularModificador(forca);
     }
 
     public int getModificadorDestreza() {
-        return (destreza - 10) / 2;
+        return calcularModificador(destreza);
     }
 
     public int getModificadorConstituicao() {
-        return (constituicao - 10) / 2;
+        return calcularModificador(constituicao);
     }
 
     public int getModificadorInteligencia() {
-        return (inteligencia - 10) / 2;
+        return calcularModificador(inteligencia);
     }
 
     public int getModificadorSabedoria() {
-        return (sabedoria - 10) / 2;
+        return calcularModificador(sabedoria);
     }
 
     public int getModificadorCarisma() {
-        return (carisma - 10) / 2;
+        return calcularModificador(carisma);
+    }
+
+    private int calcularModificador(int atributo) {
+        return Math.floorDiv(atributo - 10, 2);
     }
 }
