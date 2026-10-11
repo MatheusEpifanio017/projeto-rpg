@@ -82,7 +82,7 @@ public class Personagem {
         nivel += quantidade;
     }
 
-    
+        
     public void restaurarProgresso(int nivel, int pontosVidaAtuais) {
         if (nivel < 1) {
             throw new IllegalArgumentException(
