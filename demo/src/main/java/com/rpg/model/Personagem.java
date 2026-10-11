@@ -67,4 +67,39 @@ public class Personagem {
                 pontosVidaMaximos,
                 pontosVidaAtuais + quantidade);
     }
+
+    public void subirNivel() {
+    nivel++;
+    }
+
+    public void subirNiveis(int quantidade) {
+        if (quantidade < 1) {
+            throw new IllegalArgumentException(
+                "A quantidade de niveis deve ser positiva."
+            );
+        }
+
+        nivel += quantidade;
+    }
+
+    
+    public void restaurarProgresso(int nivel, int pontosVidaAtuais) {
+        if (nivel < 1) {
+            throw new IllegalArgumentException(
+                "O nivel deve ser pelo menos 1."
+            );
+        }
+
+        if (pontosVidaAtuais < 0 ||
+                pontosVidaAtuais > pontosVidaMaximos) {
+            throw new IllegalArgumentException(
+                "Os pontos de vida informados sao invalidos."
+            );
+        }
+
+        this.nivel = nivel;
+        this.pontosVidaAtuais = pontosVidaAtuais;
+    }
+
+
 }
