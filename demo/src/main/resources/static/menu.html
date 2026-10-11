@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080D16">
+    <title>MYTHBOUND | Menu Principal</title>
+
+    <link rel="stylesheet" href="menu.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a href="menu.html" class="logo" aria-label="MYTHBOUND - Início">
+                MYTH<span>BOUND</span>
+            </a>
+
+            <button class="mobile-menu-button"
+                    id="mobile-menu-button"
+                    aria-label="Abrir menu"
+                    aria-expanded="false"
+                    aria-controls="navigation">
+                ☰
+            </button>
+
+            <nav class="navigation" id="navigation">
+                <a href="#inicio" class="nav-link active">Início</a>
+                <a href="#personagens" class="nav-link">Personagens</a>
+                <a href="#aventuras" class="nav-link">Aventuras</a>
+                <a href="#perfil" class="nav-link">Perfil</a>
+                <button class="logout-button" id="logout-button">
+                    Sair
+                </button>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero" id="inicio">
+                <div class="hero-content">
+                    <p class="eyebrow">SEU DESTINO COMEÇA AQUI</p>
+
+                    <h1>As lendas não<br>nascem prontas.</h1>
+
+                    <p class="hero-description">
+                        Crie seu personagem, prepare-se para a jornada
+                        e descubra os mistérios que aguardam nas sombras.
+                    </p>
+
+                    <a href="#personagens" class="primary-button">
+                        Explorar personagens
+                        <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+
+                <div class="hero-symbol" aria-hidden="true">
+                    <div class="symbol-ring"></div>
+                    <div class="symbol-inner">✧</div>
+                    <span class="symbol-star star-one">✦</span>
+                    <span class="symbol-star star-two">✧</span>
+                    <span class="symbol-star star-three">✦</span>
+                </div>
+
+                <div class="hero-bottom">
+                    <span>UM MUNDO DE SOMBRAS E LENDAS</span>
+                    <span>EST. UNKNOWN</span>
+                </div>
+            </section>
+
+            <section class="welcome-section" id="perfil">
+                <div>
+                    <p class="eyebrow">SALA DO AVENTUREIRO</p>
+                    <h2>Bem-vindo, aventureiro.</h2>
+                    <p class="section-description">
+                        Sua próxima história começa com uma escolha.
+                    </p>
+                </div>
+
+                <div class="profile-indicator">
+                    <div class="profile-icon">✧</div>
+                    <div>
+                        <span class="profile-label">SEU PERFIL</span>
+                        <p id="player-name">Aventureiro</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="features-section">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">O QUE VOCÊ DESEJA FAZER?</p>
+                        <h2>Escolha seu caminho</h2>
+                    </div>
+                    <span class="section-number">01 — 03</span>
+                </div>
+
+                <div class="feature-grid">
+                    <article class="feature-card" id="personagens">
+                        <div class="card-top">
+                            <span class="card-number">01</span>
+                            <span class="card-icon" aria-hidden="true">♙</span>
+                        </div>
+
+                        <div class="card-content">
+                            <p class="card-category">IDENTIDADE</p>
+                            <h3>Personagens</h3>
+                            <p>
+                                Crie heróis, escolha suas origens
+                                e prepare suas fichas para a aventura.
+                            </p>
+                            <a href="personagens.html" class="card-link">
+                                Acessar personagens <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+
+                    <article class="feature-card" id="aventuras">
+                        <div class="card-top">
+                            <span class="card-number">02</span>
+                            <span class="card-icon" aria-hidden="true">⚔</span>
+                        </div>
+
+                        <div class="card-content">
+                            <p class="card-category">EXPLORAÇÃO</p>
+                            <h3>Aventuras</h3>
+                            <p>
+                                Prepare-se para missões, encontre desafios
+                                e descubra histórias desconhecidas.
+                            </p>
+                            <button class="card-link" data-coming-soon>
+                                Em breve <span>→</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="feature-card" id="biblioteca">
+                        <div class="card-top">
+                            <span class="card-number">03</span>
+                            <span class="card-icon" aria-hidden="true">⌘</span>
+                        </div>
+
+                        <div class="card-content">
+                            <p class="card-category">CONHECIMENTO</p>
+                            <h3>Biblioteca</h3>
+                            <p>
+                                Consulte regras, classes, raças e
+                                conhecimentos úteis para suas jornadas.
+                            </p>
+                            <button class="card-link" data-coming-soon>
+                                Em breve <span>→</span>
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="quote-section">
+                <span class="quote-symbol" aria-hidden="true">“</span>
+                <p>
+                    Até mesmo a menor chama pode iluminar
+                    o caminho através da escuridão.
+                </p>
+                <span class="quote-caption">OS REGISTROS DE MYTHBOUND</span>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <a href="menu.html" class="footer-logo">MYTHBOUND</a>
+            <p>Suas histórias. Suas escolhas. Seu legado.</p>
+            <span>© MYTHBOUND — PROJETO EM DESENVOLVIMENTO</span>
+        </footer>
+    </div>
+
+    <script>
+        const menuButton = document.getElementById("mobile-menu-button");
+        const navigation = document.getElementById("navigation");
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = navigation.classList.toggle("navigation-open");
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Fechar menu" : "Abrir menu"
+            );
+        });
+
+        navigation.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                navigation.classList.remove("navigation-open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute("aria-label", "Abrir menu");
+            });
+        });
+
+        document.querySelectorAll("[data-coming-soon]").forEach(button => {
+            button.addEventListener("click", () => {
+                alert("Esta área do MYTHBOUND estará disponível em breve!");
+            });
+        });
+
+        document.getElementById("logout-button").addEventListener("click", () => {
+            window.location.href = "index.html";
+        });
+
+        const savedName = sessionStorage.getItem("mythboundPlayerName");
+
+        if (savedName && savedName.trim()) {
+            document.getElementById("player-name").textContent = savedName;
+        }
+    </script>
+</body>
+</html>

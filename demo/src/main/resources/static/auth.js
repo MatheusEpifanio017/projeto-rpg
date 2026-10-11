@@ -1,3 +1,12 @@
+
+const SUPABASE_URL = "https://leummipycreyhzvmoope.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_P5hdzuDrEfBiMQYjiCC0Pg_zhJvgH1B";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
 const loginTab = document.getElementById("login-tab");
 const registerTab = document.getElementById("register-tab");
 const loginPanel = document.getElementById("login-panel");
@@ -37,13 +46,8 @@ function switchTab(tab) {
     clearFeedback();
 }
 
-loginTab.addEventListener("click", () => {
-    switchTab("login");
-});
-
-registerTab.addEventListener("click", () => {
-    switchTab("register");
-});
+loginTab.addEventListener("click", () => switchTab("login"));
+registerTab.addEventListener("click", () => switchTab("register"));
 
 document.querySelectorAll("[data-switch]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -51,31 +55,60 @@ document.querySelectorAll("[data-switch]").forEach((button) => {
     });
 });
 
-loginForm.addEventListener("submit", (event) => {
+// LOGIN REAL COM SUPABASE AUTH
+loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (!loginForm.reportValidity()) {
-        return;
-    }
+    if (!loginForm.reportValidity()) return;
 
-    showFeedback(
-        "Interface pronta! O login será conectado ao Supabase Auth na próxima etapa."
-    );
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+
+    const submitButton = loginForm.querySelector('[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+
+    showFeedback("Entrando no mundo de MYTHBOUND...", "");
+
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) throw error;
+
+        const displayName =
+            data.user.user_metadata?.display_name ||
+            data.user.email?.split("@")[0] ||
+            "Aventureiro";
+
+        sessionStorage.setItem("mythboundPlayerName", displayName);
+
+        window.location.href = "menu.html";
+    } catch (error) {
+        showFeedback(
+            "Não foi possível entrar. Confira o e-mail e a senha e tente novamente.",
+            "error"
+        );
+    } finally {
+        if (submitButton) submitButton.disabled = false;
+    }
 });
 
-registerForm.addEventListener("submit", (event) => {
+// CADASTRO REAL COM SUPABASE AUTH
+registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (!registerForm.reportValidity()) {
-        return;
-    }
+    if (!registerForm.reportValidity()) return;
 
     const name = document.getElementById("register-name").value.trim();
+    const email = document.getElementById("register-email").value.trim();
     const password = document.getElementById("register-password").value;
-    const confirmPassword = document.getElementById("register-confirm-password").value;
+    const confirmPassword =
+        document.getElementById("register-confirm-password").value;
 
     if (name.length < 3) {
-        showFeedback("O nome de aventureiro precisa ter pelo menos 3 caracteres.", "error");
+        showFeedback("O nome precisa ter pelo menos 3 caracteres.", "error");
         return;
     }
 
@@ -85,20 +118,90 @@ registerForm.addEventListener("submit", (event) => {
     }
 
     if (password !== confirmPassword) {
-        showFeedback("As senhas não coincidem. Verifique e tente novamente.", "error");
+        showFeedback("As senhas não coincidem.", "error");
         return;
     }
 
-    showFeedback(
-        "Cadastro validado! A criação da conta será conectada ao Supabase Auth na próxima etapa.",
-        "success"
-    );
+    const submitButton = registerForm.querySelector('[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
+
+    showFeedback("Criando sua conta...", "");
+
+    try {
+        const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    display_name: name
+                }
+            }
+        });
+
+        if (error) throw error;
+
+        if (data.session) {
+            sessionStorage.setItem("mythboundPlayerName", name);
+            showFeedback("Conta criada! Entrando no MYTHBOUND...", "success");
+            window.location.href = "menu.html";
+        } else {
+            showFeedback(
+                "Conta criada! Confira seu e-mail para confirmar o cadastro e depois faça login.",
+                "success"
+            );
+            switchTab("login");
+            showFeedback(
+                "Cadastro realizado. Se a confirmação por e-mail estiver ativada, confirme seu endereço antes de entrar.",
+                "success"
+            );
+        }
+    } catch (error) {
+        showFeedback(
+            "Não foi possível criar a conta. Verifique o e-mail e se ele já está cadastrado.",
+            "error"
+        );
+    } finally {
+        if (submitButton) submitButton.disabled = false;
+    }
 });
 
-forgotPasswordButton.addEventListener("click", () => {
-    showFeedback(
-        "A recuperação de senha será disponibilizada quando o Supabase Auth for integrado."
-    );
-});
+// RECUPERAÇÃO DE SENHA
+forgotPasswordButton.addEventListener("click", async () => {
+    const emailInput = document.getElementById("login-email");
+    const email = emailInput.value.trim();
 
-switchTab("login");
+    if (!email) {
+        showFeedback(
+            "Digite seu e-mail no campo de login antes de solicitar a recuperação.",
+            "error"
+        );
+        emailInput.focus();
+        return;
+    }
+
+    try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            {
+                redirectTo: `${window.location.origin}/index.html`
+            }
+        );
+
+        if (error) throw error;
+
+        showFeedback(
+            "Se houver uma conta para esse e-mail, você receberá instruções de recuperação.",
+            "success"
+        );
+      } catch (error) {
+    console.error("Erro no login:", error);
+
+    showFeedback(
+        `Erro no login: ${error.message}`,
+        "error"
+    );
+}
+    }
+    );
+
+switchTab("login"); 

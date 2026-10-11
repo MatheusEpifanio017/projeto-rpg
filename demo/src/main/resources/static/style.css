@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&display=swap');
+
 :root {
     --background: #080D16;
     --background-deep: #050810;
@@ -12,9 +14,6 @@
     --danger: #E9A4AD;
     --success: #B5D8C1;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&display=swap');
-
 * {
     box-sizing: border-box;
     margin: 0;
