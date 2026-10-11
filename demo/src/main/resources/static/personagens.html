@@ -2,83 +2,149 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080D16">
-    <title>MYTHBOUND | Personagens</title>
-    <link rel="stylesheet" href="personagens.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080D16">
+  <title>MYTHBOUND | Personagens</title>
+  <link rel="stylesheet" href="personagens.css">
 </head>
 <body>
-    <header class="topbar">
-        <a href="menu.html" class="logo">MYTH<span>BOUND</span></a>
-        <a href="menu.html" class="back-link">← Voltar ao menu</a>
-    </header>
+  <header class="topbar">
+    <a href="menu.html" class="logo">MYTH<span>BOUND</span></a>
+    <a href="menu.html" class="back-link">← Voltar ao menu</a>
+  </header>
 
-    <main class="container">
-        <section class="heading">
-            <p class="eyebrow">SALA DO AVENTUREIRO</p>
-            <h1>Seus personagens</h1>
-            <p>Crie heróis, descubra suas origens e prepare-se para a aventura.</p>
+  <main class="container">
+    <section class="heading">
+      <p class="eyebrow">SALA DO AVENTUREIRO</p>
+      <h1>Seus personagens</h1>
+      <p>Crie heróis, descubra suas origens e prepare-se para a aventura.</p>
+    </section>
+
+    <section class="characters-section">
+      <div class="section-heading">
+        <h2>Suas criações</h2>
+        <button type="button" class="primary-button" id="create-button">+ Criar personagem</button>
+      </div>
+      <div id="character-list" class="character-grid"></div>
+    </section>
+
+    <section id="character-form-section" class="form-section" hidden>
+      <h2>Novo personagem</h2>
+
+      <form id="character-form">
+        <label for="character-name">Nome</label>
+        <input id="character-name" type="text" maxlength="60" required placeholder="Nome do aventureiro">
+
+        <label for="character-race">Raça</label>
+        <select id="character-race" required>
+          <option value="">Carregando raças...</option>
+        </select>
+
+        <div id="race-details" class="choice-details" hidden aria-live="polite">
+          <p class="panel-eyebrow">ORIGEM</p>
+          <h3 id="race-title"></h3>
+          <p id="race-description"></p>
+          <h4>Passiva racial</h4>
+          <p id="race-passive-name"></p>
+          <p id="race-passive-description"></p>
+          <p id="race-passive-condition" class="muted-text"></p>
+          <h4>Bônus raciais</h4>
+          <div id="race-bonuses" class="bonus-list"></div>
+        </div>
+
+        <label for="character-class">Classe</label>
+        <select id="character-class" required>
+          <option value="">Carregando classes...</option>
+        </select>
+
+        <div id="class-details" class="choice-details" hidden aria-live="polite">
+          <p class="panel-eyebrow">CAMINHO DE COMBATE</p>
+          <h3 id="class-title"></h3>
+          <p id="class-description"></p>
+
+          <div class="resource-summary">
+            <div><span>PV iniciais</span><strong id="class-hp"></strong></div>
+            <div><span>Energia máxima</span><strong id="class-energy"></strong></div>
+          </div>
+
+          <h4>Atributos-base</h4>
+          <div id="class-attributes" class="attribute-grid"></div>
+
+          <h4>Habilidades iniciais</h4>
+          <ul id="class-abilities" class="ability-list"></ul>
+        </div>
+
+        <section id="character-preview" class="character-preview" hidden aria-live="polite">
+          <p class="panel-eyebrow">PRÉVIA DA FICHA</p>
+          <h3 id="preview-name">Novo aventureiro</h3>
+          <p id="preview-identity"></p>
+
+          <div class="resource-summary">
+            <div><span>Vida</span><strong id="preview-hp"></strong></div>
+            <div><span>Defesa</span><strong id="preview-defense"></strong></div>
+            <div><span>Energia</span><strong id="preview-energy"></strong></div>
+          </div>
+
+          <h4>Atributos finais</h4>
+          <div id="preview-attributes" class="attribute-grid"></div>
+
+          <h4>Passiva racial</h4>
+          <p id="preview-passive" class="muted-text"></p>
+
+          <h4>Habilidades iniciais</h4>
+          <ul id="preview-abilities" class="ability-list"></ul>
         </section>
 
-        <section class="characters-section">
-            <div class="section-heading">
-                <h2>Suas criações</h2>
-                <button class="primary-button" id="create-button">
-                    + Criar personagem
-                </button>
-            </div>
+        <label for="character-backstory">História do personagem</label>
+        <textarea id="character-backstory" rows="4" maxlength="2000" placeholder="Conte a história do seu aventureiro..."></textarea>
 
-            <div id="character-list" class="character-grid"></div>
-        </section>
+        <div class="form-actions">
+          <button type="button" class="secondary-button" id="cancel-button">Cancelar</button>
+          <button type="submit" class="primary-button" id="save-button">Salvar personagem</button>
+        </div>
+      </form>
+    </section>
+  </main>
 
-        <section id="character-form-section" class="form-section" hidden>
-            <h2>Novo personagem</h2>
+  <section id="character-details-modal" class="character-details-modal" hidden aria-modal="true" role="dialog" aria-labelledby="details-name">
+    <div class="character-details-content">
+      <button type="button" id="close-details-button" class="close-details-button" aria-label="Fechar detalhes">✕</button>
 
-            <form id="character-form">
-                <label for="character-name">Nome</label>
-                <input
-                    id="character-name"
-                    maxlength="60"
-                    required
-                    placeholder="Nome do aventureiro"
-                >
+      <p class="eyebrow">FICHA DO AVENTUREIRO</p>
+      <h2 id="details-name"></h2>
+      <p id="details-identity" class="details-identity"></p>
 
-                <label for="character-race">Raça</label>
-                <select id="character-race" required>
-                    <option value="">Carregando raças...</option>
-                </select>
+      <div class="resource-summary">
+        <div><span>Vida atual</span><strong id="details-hp"></strong></div>
+        <div><span>Defesa</span><strong id="details-defense"></strong></div>
+        <div><span>Energia</span><strong id="details-energy"></strong></div>
+        <div><span>Nível</span><strong id="details-level"></strong></div>
+      </div>
 
-                <label for="character-class">Classe</label>
-                <select id="character-class" required>
-                    <option value="">Carregando classes...</option>
-                </select>
+      <h3>Atributos</h3>
+      <div id="details-attributes" class="attribute-grid"></div>
 
-                <label for="character-backstory">História do personagem</label>
-                <textarea
-                    id="character-backstory"
-                    rows="4"
-                    maxlength="2000"
-                    placeholder="Conte a história do seu aventureiro..."
-                ></textarea>
+      <h3>Origem e passiva racial</h3>
+      <p id="details-race-description"></p>
+      <h4 id="details-passive-name"></h4>
+      <p id="details-passive-description"></p>
+      <p id="details-passive-condition" class="muted-text"></p>
 
-                <div class="form-actions">
-                    <button
-                        type="button"
-                        class="secondary-button"
-                        id="cancel-button"
-                    >
-                        Cancelar
-                    </button>
+      <h3>Classe e habilidades</h3>
+      <p id="details-class-description"></p>
+      <ul id="details-abilities" class="ability-list"></ul>
 
-                    <button type="submit" class="primary-button">
-                        Salvar personagem
-                    </button>
-                </div>
-            </form>
-        </section>
-    </main>
+      <div id="details-backstory-section" hidden>
+        <h3>História</h3>
+        <p id="details-backstory"></p>
+      </div>
 
-    <script src="personagens.js"></script>
+      <button type="button" id="close-details-footer" class="secondary-button">Fechar ficha</button>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="personagens.js"></script>
 </body>
 </html>

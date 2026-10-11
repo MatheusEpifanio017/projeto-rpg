@@ -1,14 +1,20 @@
 
 package com.rpg.service;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rpg.catalogo.CatalogoClasses;
+import com.rpg.catalogo.CatalogoRacas;
 import com.rpg.entity.PersonagemEntity;
+import com.rpg.model.Atributos;
+import com.rpg.model.Classe;
+import com.rpg.model.Personagem;
+import com.rpg.model.Raca;
 import com.rpg.repository.PersonagemRepository;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class PersonagemService {
@@ -23,30 +29,59 @@ public class PersonagemService {
     public PersonagemEntity criar(
             UUID jogadorId,
             String nome,
-            String classe,
-            String raca
-    ) {
+            String classeNome,
+            String racaNome) {
+
         validarJogadorId(jogadorId);
 
         nome = validarTexto(nome, "O nome do personagem");
-        classe = validarTexto(classe, "A classe do personagem");
-        raca = validarTexto(raca, "A raça do personagem");
+        classeNome = validarTexto(classeNome, "A classe do personagem");
+        racaNome = validarTexto(racaNome, "A raça do personagem");
 
-        PersonagemEntity personagem = new PersonagemEntity();
+        Classe classe = CatalogoClasses.buscar(classeNome);
+        Raca raca = CatalogoRacas.buscar(racaNome);
 
-        personagem.setJogadorId(jogadorId);
-        personagem.setNome(nome);
-        personagem.setClasse(classe);
-        personagem.setRaca(raca);
-        personagem.setNivel(1);
+        Atributos atributosBase = classe.getAtributosBase();
+        Atributos atributosFinais =
+                atributosBase.somar(raca.getBonusAtributos());
 
-        return personagemRepository.save(personagem);
+        int vidaMaxima = classe.getPontosVidaBase();
+
+        Personagem personagem = new Personagem(
+                nome,
+                classe,
+                raca,
+                atributosBase,
+                atributosFinais,
+                vidaMaxima
+        );
+
+        Atributos atributos = personagem.getAtributosFinais();
+
+        PersonagemEntity entidade = new PersonagemEntity();
+
+        entidade.setJogadorId(jogadorId);
+        entidade.setNome(nome);
+        entidade.setClasse(classe.getNome());
+        entidade.setRaca(raca.getNome());
+        entidade.setNivel(1);
+
+        entidade.setForca(atributos.getForca());
+        entidade.setDestreza(atributos.getDestreza());
+        entidade.setConstituicao(atributos.getConstituicao());
+        entidade.setInteligencia(atributos.getInteligencia());
+        entidade.setSabedoria(atributos.getSabedoria());
+        entidade.setCarisma(atributos.getCarisma());
+
+        entidade.setVidaMaxima(personagem.getPontosVidaMaximos());
+        entidade.setVidaAtual(personagem.getPontosVidaAtuais());
+
+        return personagemRepository.save(entidade);
     }
 
     @Transactional(readOnly = true)
     public List<PersonagemEntity> listarPorJogador(UUID jogadorId) {
         validarJogadorId(jogadorId);
-
         return personagemRepository.findByJogadorId(jogadorId);
     }
 

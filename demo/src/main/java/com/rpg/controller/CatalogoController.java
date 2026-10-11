@@ -26,3 +26,4 @@ public class CatalogoController {
         return CatalogoClasses.listar();
     }
 }
+    
