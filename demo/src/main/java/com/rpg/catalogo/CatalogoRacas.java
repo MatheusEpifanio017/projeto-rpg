@@ -1,14 +1,14 @@
 
 package com.rpg.catalogo;
 
+import static com.rpg.model.PassivaRacial.Tipo.*;
+
 import java.util.List;
 import java.util.Map;
 
 import com.rpg.model.Atributos;
 import com.rpg.model.PassivaRacial;
 import com.rpg.model.Raca;
-
-import static com.rpg.model.PassivaRacial.Tipo.*;
 
 public final class CatalogoRacas {
 

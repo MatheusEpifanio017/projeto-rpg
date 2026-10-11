@@ -1,11 +1,11 @@
 
 package com.rpg.service;
 
-import com.rpg.historia.EstadoHistoria;
-import com.rpg.inventario.Item;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.rpg.historia.EstadoHistoria;
+import com.rpg.inventario.Item;
 
 public class DadosSalvamento {
 

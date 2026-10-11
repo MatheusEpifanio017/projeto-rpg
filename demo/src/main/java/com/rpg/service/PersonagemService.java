@@ -1,11 +1,11 @@
 
 package com.rpg.service;
 
-import com.rpg.entity.PersonagemEntity;
-import com.rpg.repository.PersonagemRepository;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.rpg.entity.PersonagemEntity;
+import com.rpg.repository.PersonagemRepository;
 
 import java.util.List;
 import java.util.UUID;

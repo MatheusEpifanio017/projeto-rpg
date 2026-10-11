@@ -6,12 +6,12 @@ import java.util.Scanner;
 
 import com.rpg.catalogo.CatalogoClasses;
 import com.rpg.catalogo.CatalogoRacas;
-import com.rpg.service.CombateService;
 import com.rpg.combate.ResultadoAtaque;
 import com.rpg.combate.TipoDano;
 import com.rpg.model.Classe;
 import com.rpg.model.Personagem;
 import com.rpg.model.Raca;
+import com.rpg.service.CombateService;
 import com.rpg.service.CriacaoPersonagemService;
 
 public class Main {

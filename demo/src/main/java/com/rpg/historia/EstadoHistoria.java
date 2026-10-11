@@ -1,4 +1,3 @@
-
 package com.rpg.historia;
 
 import java.util.Collections;
@@ -9,7 +8,7 @@ public class EstadoHistoria {
 
     private String capituloAtual;
     private String cenaAtual;
-    
+
     private final Map<String, Boolean> decisoes;
     private final Map<String, Boolean> informacoesDescobertas;
 
@@ -46,27 +45,29 @@ public class EstadoHistoria {
 
         this.cenaAtual = cenaAtual;
     }
-    
-        public void setDecisoes(Map<String, Boolean> decisoes) {
+
+    public void avancarCena(String proximaCena) {
+        setCenaAtual(proximaCena);
+    }
+
+    public void setDecisoes(Map<String, Boolean> decisoes) {
         this.decisoes.clear();
 
         if (decisoes != null) {
-        this.decisoes.putAll(decisoes);
+            this.decisoes.putAll(decisoes);
         }
-        }
+    }
 
-        public void setInformacoesDescobertas(
-        Map<String, Boolean> informacoesDescobertas) {
+    public void setInformacoesDescobertas(
+            Map<String, Boolean> informacoesDescobertas) {
 
         this.informacoesDescobertas.clear();
 
         if (informacoesDescobertas != null) {
-        this.informacoesDescobertas.putAll(
-        informacoesDescobertas
-        );
+            this.informacoesDescobertas.putAll(
+                    informacoesDescobertas);
         }
-        }
-
+    }
 
     public void registrarDecisao(
             String decisao, boolean resultado) {

@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080D16">
+    <title>MYTHBOUND | Personagens</title>
+    <link rel="stylesheet" href="personagens.css">
+</head>
+<body>
+    <header class="topbar">
+        <a href="menu.html" class="logo">MYTH<span>BOUND</span></a>
+        <a href="menu.html" class="back-link">← Voltar ao menu</a>
+    </header>
+
+    <main class="container">
+        <section class="heading">
+            <p class="eyebrow">SALA DO AVENTUREIRO</p>
+            <h1>Seus personagens</h1>
+            <p>Crie heróis, descubra suas origens e prepare-se para a aventura.</p>
+        </section>
+
+        <section class="characters-section">
+            <div class="section-heading">
+                <h2>Suas criações</h2>
+                <button class="primary-button" id="create-button">
+                    + Criar personagem
+                </button>
+            </div>
+
+            <div id="character-list" class="character-grid"></div>
+        </section>
+
+        <section id="character-form-section" class="form-section" hidden>
+            <h2>Novo personagem</h2>
+
+            <form id="character-form">
+                <label for="character-name">Nome</label>
+                <input
+                    id="character-name"
+                    maxlength="60"
+                    required
+                    placeholder="Nome do aventureiro"
+                >
+
+                <label for="character-race">Raça</label>
+                <select id="character-race" required>
+                    <option value="">Carregando raças...</option>
+                </select>
+
+                <label for="character-class">Classe</label>
+                <select id="character-class" required>
+                    <option value="">Carregando classes...</option>
+                </select>
+
+                <label for="character-backstory">História do personagem</label>
+                <textarea
+                    id="character-backstory"
+                    rows="4"
+                    maxlength="2000"
+                    placeholder="Conte a história do seu aventureiro..."
+                ></textarea>
+
+                <div class="form-actions">
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancel-button"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="primary-button">
+                        Salvar personagem
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="personagens.js"></script>
+</body>
+</html>
