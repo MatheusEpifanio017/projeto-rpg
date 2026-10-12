@@ -18,8 +18,7 @@ public class PersonagemController {
 
     private final PersonagemService personagemService;
 
-    public PersonagemController(
-            PersonagemService personagemService) {
+    public PersonagemController(PersonagemService personagemService) {
         this.personagemService = personagemService;
     }
 
@@ -30,7 +29,8 @@ public class PersonagemController {
         if (request == null) {
             return ResponseEntity.badRequest()
                     .body(Map.of(
-                            "erro", "Os dados do personagem são obrigatórios."
+                            "erro",
+                            "Os dados do personagem são obrigatórios."
                     ));
         }
 
@@ -56,10 +56,9 @@ public class PersonagemController {
             @RequestParam UUID jogadorId) {
 
         try {
-            List<PersonagemEntity> personagens =
-                    personagemService.listarPorJogador(jogadorId);
-
-            return ResponseEntity.ok(personagens);
+            return ResponseEntity.ok(
+                    personagemService.listarPorJogador(jogadorId)
+            );
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
@@ -67,12 +66,34 @@ public class PersonagemController {
         }
     }
 
-    public record CriarPersonagemRequest(
-            UUID jogadorId,
-            String nome,
-            String classe,
-            String raca
-    ) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editar(
+            @PathVariable UUID id,
+            @RequestBody EditarPersonagemRequest request) {
+
+        if (request == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of(
+                            "erro",
+                            "Os dados para edição são obrigatórios."
+                    ));
+        }
+
+        try {
+            PersonagemEntity personagem = personagemService.editar(
+                    request.jogadorId(),
+                    id,
+                    request.nome(),
+                    request.classe(),
+                    request.raca()
+            );
+
+            return ResponseEntity.ok(personagem);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("erro", e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -88,5 +109,21 @@ public class PersonagemController {
             return ResponseEntity.badRequest()
                     .body(Map.of("erro", e.getMessage()));
         }
+    }
+
+    public record CriarPersonagemRequest(
+            UUID jogadorId,
+            String nome,
+            String classe,
+            String raca
+    ) {
+    }
+
+    public record EditarPersonagemRequest(
+            UUID jogadorId,
+            String nome,
+            String classe,
+            String raca
+    ) {
     }
 }

@@ -12,7 +12,7 @@ const saveButton = document.getElementById("save-button");
 const detailsModal = document.getElementById("character-details-modal");
 
 const SUPABASE_URL = "https://leummipycreyhzvmoope.supabase.co";
-const SUPABASE_KEY = "sb_publishable_P5hdzuDrEfBiMQYjiCC0Pg_zhJvgH1B";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_P5hdzuDrEfBiMQYjiCC0Pg_zhJvgH1B";
 
 const NOMES_ATRIBUTOS = {
   forca: "Força",
@@ -30,6 +30,7 @@ let racasCatalogo = [];
 let classesCatalogo = [];
 let catalogosCarregados = false;
 let salvandoPersonagem = false;
+let personagemEmEdicao = null;
 
 function elemento(id) {
   return document.getElementById(id);
@@ -287,10 +288,10 @@ function atualizarPrevia() {
 function normalizarPersonagem(item) {
   return {
     id: item.id,
-    name: item.nome,
-    race: item.raca,
-    characterClass: item.classe,
-    level: item.nivel ?? 1,
+    name: item.nome ?? item.name,
+    race: item.raca ?? item.race,
+    characterClass: item.classe ?? item.characterClass,
+    level: item.nivel ?? item.level ?? 1,
     backstory: item.historia ?? item.backstory ?? "",
     forca: item.forca,
     destreza: item.destreza,
@@ -316,46 +317,58 @@ function obterAtributosPersonagem(personagem) {
 
 async function inicializarSupabase() {
   if (!window.supabase) {
-    throw new Error("Não foi possível carregar o serviço de autenticação.");
+    throw new Error("Não foi possível carregar a biblioteca do Supabase.");
   }
 
-  supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+  if (!supabaseClient) {
+    supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+  }
 }
 
 async function obterJogadorAutenticado() {
-  if (!supabaseClient) {
-    await inicializarSupabase();
-  }
+  try {
+    if (!supabaseClient) {
+      await inicializarSupabase();
+    }
 
-  const {
-    data: { session },
-    error: sessionError
-  } = await supabaseClient.auth.getSession();
+    const { data, error } = await supabaseClient.auth.getSession();
 
-  if (sessionError) {
-    throw new Error("Não foi possível verificar sua sessão.");
-  }
+    if (error) {
+      alert("Erro ao verificar sessão: " + error.message);
+      return null;
+    }
 
-  if (!session) {
-    window.location.href = "index.html";
+    if (!data.session) {
+      alert(
+        "DIAGNÓSTICO: nenhuma sessão encontrada.\n\n" +
+        "Verifique se o login e personagens.html usam o mesmo endereço."
+      );
+      return null;
+    }
+
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user) {
+      alert(
+        "Sessão encontrada, mas não foi possível recuperar o usuário: " +
+        (userError?.message || "usuário não encontrado")
+      );
+      return null;
+    }
+
+    jogadorId = userData.user.id;
+
+    alert("Sessão encontrada! ID do usuário recuperado.");
+
+    return jogadorId;
+  } catch (erro) {
+    alert("Erro na autenticação: " + erro.message);
     return null;
   }
-
-  const {
-    data: { user },
-    error: userError
-  } = await supabaseClient.auth.getUser();
-
-  if (userError || !user) {
-    window.location.href = "index.html";
-    return null;
-  }
-
-  jogadorId = user.id;
-  return jogadorId;
 }
 
 async function requisicaoApi(url, options = {}) {
@@ -423,6 +436,18 @@ function openForm() {
     return;
   }
 
+  personagemEmEdicao = null;
+  characterForm.reset();
+
+  raceSelect.disabled = false;
+  classSelect.disabled = false;
+  characterBackstoryInput.disabled = false;
+
+  elemento("character-form-section").querySelector("h2").textContent =
+    "Novo personagem";
+
+  saveButton.textContent = "Salvar personagem";
+
   characterFormSection.hidden = false;
   characterFormSection.scrollIntoView({
     behavior: "smooth",
@@ -432,12 +457,21 @@ function openForm() {
   atualizarDetalhesRaca();
   atualizarDetalhesClasse();
   atualizarPrevia();
+
   characterNameInput.focus();
 }
 
 function closeForm() {
   characterForm.reset();
   characterFormSection.hidden = true;
+  personagemEmEdicao = null;
+
+  raceSelect.disabled = false;
+  classSelect.disabled = false;
+  characterBackstoryInput.disabled = false;
+
+  elemento("character-form-section").querySelector("h2").textContent =
+    "Novo personagem";
 
   elemento("race-details").hidden = true;
   elemento("class-details").hidden = true;
@@ -630,9 +664,67 @@ function abrirDetalhesPersonagem(id) {
   historiaSection.hidden = !historia;
   mostrarTexto("details-backstory", historia);
 
+  let editButton = elemento("edit-character-button");
+
+  if (!editButton) {
+    editButton = document.createElement("button");
+    editButton.id = "edit-character-button";
+    editButton.type = "button";
+    editButton.className = "primary-button";
+
+    elemento("close-details-footer").before(editButton);
+  }
+
+  editButton.textContent = "Editar personagem";
+  editButton.onclick = () => editarPersonagem(personagem.id);
+
   detailsModal.hidden = false;
   document.body.classList.add("modal-open");
   elemento("close-details-button").focus();
+}
+
+function editarPersonagem(id) {
+  const personagem = personagens.find(
+    (item) => String(item.id) === String(id)
+  );
+
+  if (!personagem) {
+    alert("Não foi possível encontrar este personagem.");
+    return;
+  }
+
+  fecharDetalhesPersonagem();
+
+  personagemEmEdicao = personagem;
+
+  characterForm.reset();
+
+  characterNameInput.value = personagem.name;
+  characterBackstoryInput.value = personagem.backstory || "";
+
+  raceSelect.value = personagem.race;
+  classSelect.value = personagem.characterClass;
+
+  raceSelect.disabled = true;
+  classSelect.disabled = true;
+  characterBackstoryInput.disabled = false;
+
+  elemento("character-form-section").querySelector("h2").textContent =
+    "Editar personagem";
+
+  saveButton.textContent = "Salvar alterações";
+
+  characterFormSection.hidden = false;
+  characterFormSection.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  atualizarDetalhesRaca();
+  atualizarDetalhesClasse();
+  atualizarPrevia();
+
+  characterNameInput.focus();
 }
 
 function fecharDetalhesPersonagem() {
@@ -753,39 +845,88 @@ characterForm.addEventListener("submit", async (event) => {
   }
 
   const nome = characterNameInput.value.trim();
-  const raca = raceSelect.value;
-  const classe = classSelect.value;
+  const historia = characterBackstoryInput.value.trim();
+  const personagemEditado = personagemEmEdicao;
+  const editando = personagemEditado !== null;
 
-  if (!nome || !raca || !classe) {
-    alert("Preencha o nome, a raça e a classe do personagem.");
+  if (!nome) {
+    alert("Informe o nome do personagem.");
+    return;
+  }
+
+  if (!editando && (!raceSelect.value || !classSelect.value)) {
+    alert("Selecione a raça e a classe do personagem.");
     return;
   }
 
   salvandoPersonagem = true;
   saveButton.disabled = true;
   saveButton.textContent = "Salvando...";
+  cancelButton.disabled = true;
 
   try {
-    const dados = await requisicaoApi("/api/personagens", {
-      method: "POST",
-      body: JSON.stringify({
-        jogadorId,
-        nome,
-        classe,
-        raca
-      })
+    const url = editando
+      ? `/api/personagens/${encodeURIComponent(personagemEditado.id)}`
+      : "/api/personagens";
+
+    const corpo = editando
+      ? {
+          jogadorId,
+          nome,
+          classe: personagemEditado.characterClass,
+          raca: personagemEditado.race,
+          historia
+        }
+      : {
+          jogadorId,
+          nome,
+          classe: classSelect.value,
+          raca: raceSelect.value,
+          historia
+        };
+
+    const dados = await requisicaoApi(url, {
+      method: editando ? "PUT" : "POST",
+      body: JSON.stringify(corpo)
     });
 
-    personagens.push(normalizarPersonagem(dados));
+    const personagemAtualizado = normalizarPersonagem(dados);
+
+    if (editando) {
+      personagens = personagens.map((personagem) =>
+        String(personagem.id) === String(personagemEditado.id)
+          ? {
+              ...personagem,
+              ...personagemAtualizado,
+              id: personagem.id,
+              name: personagemAtualizado.name || nome,
+              race: personagemEditado.race,
+              characterClass: personagemEditado.characterClass,
+              backstory: personagemAtualizado.backstory ?? historia
+            }
+          : personagem
+      );
+    } else {
+      personagens.push(personagemAtualizado);
+    }
+
     renderCharacters();
     closeForm();
-    alert("Personagem salvo com sucesso!");
+
+    alert(
+      editando
+        ? "Personagem atualizado com sucesso!"
+        : "Personagem criado com sucesso!"
+    );
   } catch (erro) {
     alert(`Não foi possível salvar o personagem: ${erro.message}`);
   } finally {
     salvandoPersonagem = false;
     saveButton.disabled = false;
-    saveButton.textContent = "Salvar personagem";
+    cancelButton.disabled = false;
+    saveButton.textContent = personagemEmEdicao
+      ? "Salvar alterações"
+      : "Salvar personagem";
   }
 });
 
@@ -825,7 +966,9 @@ async function iniciarPagina() {
     await carregarCatalogos();
 
     if (!catalogosCarregados) {
-      alert("Não foi possível carregar as raças e classes. Verifique se o servidor está funcionando.");
+      alert(
+        "Não foi possível carregar as raças e classes. Verifique se o servidor está funcionando."
+      );
     }
 
     await carregarPersonagens();

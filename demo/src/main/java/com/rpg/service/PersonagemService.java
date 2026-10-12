@@ -45,15 +45,13 @@ public class PersonagemService {
         Atributos atributosFinais =
                 atributosBase.somar(raca.getBonusAtributos());
 
-        int vidaMaxima = classe.getPontosVidaBase();
-
         Personagem personagem = new Personagem(
                 nome,
                 classe,
                 raca,
                 atributosBase,
                 atributosFinais,
-                vidaMaxima
+                classe.getPontosVidaBase()
         );
 
         Atributos atributos = personagem.getAtributosFinais();
@@ -83,6 +81,103 @@ public class PersonagemService {
     public List<PersonagemEntity> listarPorJogador(UUID jogadorId) {
         validarJogadorId(jogadorId);
         return personagemRepository.findByJogadorId(jogadorId);
+    }
+
+    @Transactional
+    public PersonagemEntity editar(
+            UUID jogadorId,
+            UUID personagemId,
+            String nome,
+            String classeNome,
+            String racaNome) {
+
+        validarJogadorId(jogadorId);
+
+        if (personagemId == null) {
+            throw new IllegalArgumentException(
+                    "O personagem precisa ser identificado."
+            );
+        }
+
+        nome = validarTexto(nome, "O nome do personagem");
+        classeNome = validarTexto(classeNome, "A classe do personagem");
+        racaNome = validarTexto(racaNome, "A raça do personagem");
+
+        PersonagemEntity entidade = personagemRepository
+                .findById(personagemId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Personagem não encontrado."
+                ));
+
+        if (!jogadorId.equals(entidade.getJogadorId())) {
+            throw new IllegalArgumentException(
+                    "Você não tem permissão para editar este personagem."
+            );
+        }
+
+        Classe classe = CatalogoClasses.buscar(classeNome);
+        Raca raca = CatalogoRacas.buscar(racaNome);
+
+        Atributos atributosFinais = classe.getAtributosBase()
+                .somar(raca.getBonusAtributos());
+
+        Integer vidaMaximaAnterior = entidade.getVidaMaxima();
+        Integer vidaAtualAnterior = entidade.getVidaAtual();
+        int vidaMaximaNova = classe.getPontosVidaBase();
+
+        int vidaAtualNova = vidaAtualAnterior != null
+                ? vidaAtualAnterior
+                : vidaMaximaNova;
+
+        if (vidaMaximaAnterior == null
+        || vidaMaximaNova != vidaMaximaAnterior) {
+
+            vidaAtualNova = Math.min(
+                    Math.max(vidaAtualNova, 0),
+                    vidaMaximaNova
+            );
+        }
+
+        entidade.setNome(nome);
+        entidade.setClasse(classe.getNome());
+        entidade.setRaca(raca.getNome());
+
+        entidade.setForca(atributosFinais.getForca());
+        entidade.setDestreza(atributosFinais.getDestreza());
+        entidade.setConstituicao(atributosFinais.getConstituicao());
+        entidade.setInteligencia(atributosFinais.getInteligencia());
+        entidade.setSabedoria(atributosFinais.getSabedoria());
+        entidade.setCarisma(atributosFinais.getCarisma());
+
+        entidade.setVidaMaxima(vidaMaximaNova);
+        entidade.setVidaAtual(vidaAtualNova);
+
+        return personagemRepository.save(entidade);
+    }
+
+    @Transactional
+    public void excluir(UUID jogadorId, UUID personagemId) {
+        validarJogadorId(jogadorId);
+
+        if (personagemId == null) {
+            throw new IllegalArgumentException(
+                    "O personagem precisa ser identificado."
+            );
+        }
+
+        PersonagemEntity entidade = personagemRepository
+                .findById(personagemId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Personagem não encontrado."
+                ));
+
+        if (!jogadorId.equals(entidade.getJogadorId())) {
+            throw new IllegalArgumentException(
+                    "Você não tem permissão para excluir este personagem."
+            );
+        }
+
+        personagemRepository.delete(entidade);
     }
 
     private void validarJogadorId(UUID jogadorId) {

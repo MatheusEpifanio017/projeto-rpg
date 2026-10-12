@@ -1,4 +1,3 @@
-
 const SUPABASE_URL = "https://leummipycreyhzvmoope.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_P5hdzuDrEfBiMQYjiCC0Pg_zhJvgH1B";
 
@@ -55,7 +54,6 @@ document.querySelectorAll("[data-switch]").forEach((button) => {
     });
 });
 
-// LOGIN REAL COM SUPABASE AUTH
 loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -65,6 +63,7 @@ loginForm.addEventListener("submit", async (event) => {
     const password = document.getElementById("login-password").value;
 
     const submitButton = loginForm.querySelector('[type="submit"]');
+
     if (submitButton) submitButton.disabled = true;
 
     showFeedback("Entrando no mundo de MYTHBOUND...", "");
@@ -77,6 +76,10 @@ loginForm.addEventListener("submit", async (event) => {
 
         if (error) throw error;
 
+        if (!data.session || !data.user) {
+            throw new Error("O login não criou uma sessão válida.");
+        }
+
         const displayName =
             data.user.user_metadata?.display_name ||
             data.user.email?.split("@")[0] ||
@@ -84,8 +87,14 @@ loginForm.addEventListener("submit", async (event) => {
 
         sessionStorage.setItem("mythboundPlayerName", displayName);
 
-        window.location.href = "menu.html";
+        console.log("Login realizado com sucesso.");
+        console.log("ID do usuário:", data.user.id);
+        console.log("Sessão criada:", Boolean(data.session));
+
+        window.location.href = new URL("menu.html", window.location.href).href;
     } catch (error) {
+        console.error("Erro no login:", error);
+
         showFeedback(
             "Não foi possível entrar. Confira o e-mail e a senha e tente novamente.",
             "error"
@@ -95,7 +104,6 @@ loginForm.addEventListener("submit", async (event) => {
     }
 });
 
-// CADASTRO REAL COM SUPABASE AUTH
 registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -123,6 +131,7 @@ registerForm.addEventListener("submit", async (event) => {
     }
 
     const submitButton = registerForm.querySelector('[type="submit"]');
+
     if (submitButton) submitButton.disabled = true;
 
     showFeedback("Criando sua conta...", "");
@@ -140,22 +149,26 @@ registerForm.addEventListener("submit", async (event) => {
 
         if (error) throw error;
 
-        if (data.session) {
+        if (data.session && data.user) {
             sessionStorage.setItem("mythboundPlayerName", name);
-            showFeedback("Conta criada! Entrando no MYTHBOUND...", "success");
-            window.location.href = "menu.html";
-        } else {
+
             showFeedback(
-                "Conta criada! Confira seu e-mail para confirmar o cadastro e depois faça login.",
+                "Conta criada! Entrando no MYTHBOUND...",
                 "success"
             );
+
+            window.location.href = "/menu.html";
+        } else {
             switchTab("login");
+
             showFeedback(
-                "Cadastro realizado. Se a confirmação por e-mail estiver ativada, confirme seu endereço antes de entrar.",
+                "Cadastro realizado! Confira seu e-mail para confirmar a conta antes de fazer login.",
                 "success"
             );
         }
     } catch (error) {
+        console.error("Erro no cadastro:", error);
+
         showFeedback(
             "Não foi possível criar a conta. Verifique o e-mail e se ele já está cadastrado.",
             "error"
@@ -165,7 +178,6 @@ registerForm.addEventListener("submit", async (event) => {
     }
 });
 
-// RECUPERAÇÃO DE SENHA
 forgotPasswordButton.addEventListener("click", async () => {
     const emailInput = document.getElementById("login-email");
     const email = emailInput.value.trim();
@@ -175,6 +187,7 @@ forgotPasswordButton.addEventListener("click", async () => {
             "Digite seu e-mail no campo de login antes de solicitar a recuperação.",
             "error"
         );
+
         emailInput.focus();
         return;
     }
@@ -193,15 +206,14 @@ forgotPasswordButton.addEventListener("click", async () => {
             "Se houver uma conta para esse e-mail, você receberá instruções de recuperação.",
             "success"
         );
-      } catch (error) {
-    console.error("Erro no login:", error);
+    } catch (error) {
+        console.error("Erro na recuperação de senha:", error);
 
-    showFeedback(
-        `Erro no login: ${error.message}`,
-        "error"
-    );
-}
+        showFeedback(
+            "Não foi possível solicitar a recuperação de senha. Tente novamente.",
+            "error"
+        );
     }
-    );
+});
 
-switchTab("login"); 
+switchTab("login");
